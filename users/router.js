@@ -103,7 +103,7 @@ router.post('/', jsonParser, (req, res) => {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
+          message: 'Email already taken',
           location: 'username'
         });
       }
@@ -136,11 +136,24 @@ router.post('/', jsonParser, (req, res) => {
 // we're just doing this so we have a quick way to see
 // if we're creating users. keep in mind, you can also
 // verify this in the Mongo shell.
+/*
 router.get('/', (req, res) => {
   return User
     .find()
     .then(users => res.json(users.map(user => user.apiRepr())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
+*/
+
+router.get('/', 
+  passport.authenticate('jwt', {session: false}),
+  (req, res) => {
+    return User
+      .find(req.query)
+      .exec()
+      .then(user => res.json(user[0].apiRepr()))
+      .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
 
 module.exports = {router};

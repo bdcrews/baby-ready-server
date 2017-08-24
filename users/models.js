@@ -14,14 +14,18 @@ const UserSchema = mongoose.Schema({
     required: true
   },
   firstName: {type: String, default: ""},
-  lastName: {type: String, default: ""}
+  lastName: {type: String, default: ""},
+  lmd: {type: Date},
+  dueDate: {type: Date}
 });
 
 UserSchema.methods.apiRepr = function() {
   return {
     username: this.username || '',
     firstName: this.firstName || '',
-    lastName: this.lastName || ''
+    lastName: this.lastName || '',
+    lmd: this.lmd || '',
+    dueDate: this.dueDate || ''
   };
 }
 

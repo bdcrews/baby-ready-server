@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const JournalSchema = mongoose.Schema({
-  userid: {type: String, required: true},
+  username: {type: String, required: true},
   title: {type: String},
   journalText: {type: String, default: ""},
   timestamp: {type: Date, default: Date.now},
@@ -17,7 +17,7 @@ const JournalSchema = mongoose.Schema({
 JournalSchema.methods.apiRepr = function() {
   return {
     id: this._id,
-    userid: this.userid || '',
+    username: this.username || '',
     title: this.title || '',
     journalText: this.journalText || '',
     timestamp: this.timestamp || '',

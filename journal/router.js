@@ -11,49 +11,29 @@ const jsonParser = bodyParser.json();
 router.get('/', 
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
-    //let pageQuantity = parseInt(req.query.location.pageQuantity);
-    //let skipAmount = parseInt(req.query.location.currentPage) * pageQuantity;
-    console.log(req.query.filter);
+    let pageQuantity = parseInt(req.query.pageQuantity);
+    let skipAmount = parseInt(req.query.activePage -1) * pageQuantity;
 
+    const filter = {username: req.query.username};
+    const sort = {};
+    sort[req.query.sortfield] = req.query.sortdir;
+console.log(sort);
+    const queryCount = Journal
+      .find(filter)
+      .count();
+    const queryPages = Journal
+      .find(filter)
+      .sort(sort)
+      .skip(skipAmount)
+      .limit(pageQuantity);
 
-/*
-Promise.all([countPromise, pagePromise])
-.then(([count, page]) => res.json({
-total: count,
-documents: page
-}))
-const countPromise = Journal.find().count()
-
-app.get('/', (req, res) => {
-  User.lastLoggedin() // ONE QUERY
-    .then((user) => Promise.all([user, user.getLastComments()]))
-    .then(([user, comments] => res.json({user, comments})))
-});
-*/
-
-
-    return Journal
-      .find(req.query.filter)
-      .sort(req.query.sort)
-      //.skip(skipAmount)
-      //.limit(pageQuantity)
-      .exec()
-      .then(records => {
-        res.json(
-          records.map(record => record.apiRepr()));
-//
-//        let entryCount;
-//        Journal
-//          .find(req.query.filter)
-//          .count()
-//          .exec()
-//          .then((cnt) => {
-//            res.json({
-//              count: records.length,
-//              journal: records.map(record => record.apiRepr())
-//            });
-//          });
-        })
+    return Promise.all([queryCount, queryPages])
+      .then(([count, pages]) => {
+        res.json({
+          count,
+          pages: pages.map(page => page.apiRepr())
+        });
+      })
       .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 

@@ -15,9 +15,13 @@ router.get('/',
     let skipAmount = parseInt(req.query.activePage -1) * pageQuantity;
 
     const filter = {username: req.query.username};
+    if(req.query.title) filter['title'] = req.query.title;
+    if(req.query.doctorCheckbox) filter['doctorCheckbox'] = req.query.doctorCheckbox;
+    if(req.query.importantCheckbox) filter['importantCheckbox'] = req.query.importantCheckbox;
+
     const sort = {};
     sort[req.query.sortfield] = req.query.sortdir;
-console.log(sort);
+console.log(filter);
     const queryCount = Journal
       .find(filter)
       .count();

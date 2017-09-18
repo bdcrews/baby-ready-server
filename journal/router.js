@@ -15,13 +15,11 @@ router.get('/',
     let skipAmount = parseInt(req.query.activePage -1) * pageQuantity;
 
     const filter = {username: req.query.username};
-    if(req.query.title) filter['title'] = req.query.title;
+    if(req.query.title) filter['title'] = new RegExp(req.query.title, 'i');
     if(req.query.doctorCheckbox) filter['doctorCheckbox'] = req.query.doctorCheckbox;
     if(req.query.importantCheckbox) filter['importantCheckbox'] = req.query.importantCheckbox;
-
     const sort = {};
     sort[req.query.sortfield] = req.query.sortdir;
-console.log(filter);
     const queryCount = Journal
       .find(filter)
       .count();
@@ -44,9 +42,18 @@ console.log(filter);
 router.get('/:id', 
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
-    console.log(req.params.id);
     return Journal
       .findById(req.params.id)
+      .exec()
+      .then(record => res.json(record.apiRepr()))
+      .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
+router.delete('/:id', 
+  passport.authenticate('jwt', {session: false}),
+  (req, res) => {
+    return Journal
+      .findByIdAndRemove(req.params.id)
       .exec()
       .then(record => res.json(record.apiRepr()))
       .catch(err => res.status(500).json({message: 'Internal server error'}));

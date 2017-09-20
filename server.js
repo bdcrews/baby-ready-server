@@ -50,6 +50,7 @@ app.get('/api/protected',
 );
 
 app.use('*', (req, res) => {
+  console.log(req);
   return res.status(404).json({message: 'Not Found'});
 });
 

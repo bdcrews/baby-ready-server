@@ -16,7 +16,12 @@ const UserSchema = mongoose.Schema({
   firstName: {type: String, default: ""},
   lastName: {type: String, default: ""},
   lmd: {type: Date},
-  dueDate: {type: Date}
+  dueDate: {type: Date},
+  bloodType: {type: String},
+  rhFactor: {type: String},
+  docName: {type: String},
+  docPhone: {type: String},
+  userNotes: {type: String}
 });
 
 UserSchema.methods.apiRepr = function() {
@@ -26,7 +31,12 @@ UserSchema.methods.apiRepr = function() {
     firstName: this.firstName || '',
     lastName: this.lastName || '',
     lmd: this.lmd || '',
-    dueDate: this.dueDate || ''
+    dueDate: this.dueDate || '',
+    bloodType: this.bloodType || '',
+    rhFactor: this.rhFactor || '',
+    docName: this.docName || '',
+    docPhone: this.docPhone || '',
+    userNotes: this.userNotes || ''
   };
 }
 

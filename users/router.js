@@ -146,10 +146,7 @@ router.put('/:id',
   passport.authenticate('jwt', {session: false}),
   jsonParser,
   (req, res) => {
-
-    console.log(req.body);
-
-  User
+    return User
     .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec()
     .then(updatedPost => res.status(201).json(updatedPost.apiRepr()));

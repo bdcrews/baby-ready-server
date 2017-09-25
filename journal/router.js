@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const faker = require('faker');
 
 const {Journal} = require('./models');
 
@@ -8,14 +9,41 @@ const router = express.Router();
 
 const jsonParser = bodyParser.json();
 
+
+/*
+function seedJournalRecordData() {
+  console.info('seeding Journal data');
+  const seedData = [];
+  for (let i=1; i<=1000; i++) {
+    seedData.push({
+
+      username: "demo@mail.com", //faker.internet.email,
+      title: faker.lorem.sentence(),
+      journalText: faker.lorem.paragraphs(),
+      timestamp: faker.date.between(new Date(), new Date(99, 5, 24)),
+      doctorCheckbox: faker.random.boolean(),
+      importantCheckbox:faker.random.boolean(),
+      weight: 100 + faker.random.number()%60,
+      systolic: 120 + faker.random.number()%30,
+      diastolic: 50 + faker.random.number()%40
+    });
+  }
+  //console.log(seedData);
+  //return;
+  // this will return a promise
+  //return Journal.insertMany(seedData);
+}
+*/
+
 router.get('/', 
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
+//seedJournalRecordData();
     let pageQuantity = parseInt(req.query.pageQuantity);
     let skipAmount = parseInt(req.query.activePage -1) * pageQuantity;
 
     const filter = {username: req.query.username};
-    if(req.query.title) filter['title'] = new RegExp(req.query.title, 'i');
+    if(req.query.title != '') filter['title'] = new RegExp(req.query.title, 'i');
     if(req.query.doctorCheckbox) filter['doctorCheckbox'] = req.query.doctorCheckbox;
     if(req.query.importantCheckbox) filter['importantCheckbox'] = req.query.importantCheckbox;
     const sort = {};
@@ -23,16 +51,20 @@ router.get('/',
     const queryCount = Journal
       .find(filter)
       .count();
+    const totalCount = Journal
+      .find({username: req.query.username})
+      .count();
     const queryPages = Journal
       .find(filter)
       .sort(sort)
       .skip(skipAmount)
       .limit(pageQuantity);
 
-    return Promise.all([queryCount, queryPages])
-      .then(([count, pages]) => {
+    return Promise.all([queryCount, totalCount, queryPages])
+      .then(([count, total, pages]) => {
         res.json({
           count,
+          total,
           pages: pages.map(page => page.apiRepr())
         });
       })

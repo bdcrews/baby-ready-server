@@ -311,7 +311,7 @@ describe('/api/user', function() {
           const res = err.response;
           expect(res).to.have.status(422);
           expect(res.body.reason).to.equal('ValidationError');
-          expect(res.body.message).to.equal('Username already taken');
+          expect(res.body.message).to.equal('Email already taken');
           expect(res.body.location).to.equal('username');
         });
       });
@@ -327,7 +327,7 @@ describe('/api/user', function() {
           .then(res => {
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys('username', 'firstName', 'lastName');
+            expect(res.body).to.have.keys('username', 'firstName', 'lastName', 'bloodType', 'docName', 'docPhone', 'dueDate', 'id', 'lmd', 'rhFactor', 'userNotes');
             expect(res.body.username).to.equal(username);
             expect(res.body.firstName).to.equal(firstName);
             expect(res.body.lastName).to.equal(lastName);
@@ -357,7 +357,7 @@ describe('/api/user', function() {
           .then(res => {
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys('username', 'firstName', 'lastName');
+            expect(res.body).to.have.keys('username', 'firstName', 'lastName', 'bloodType', 'docName', 'docPhone', 'dueDate', 'id', 'lmd', 'rhFactor', 'userNotes');
             expect(res.body.username).to.equal(username);
             expect(res.body.firstName).to.equal(firstName);
             expect(res.body.lastName).to.equal(lastName);
@@ -370,47 +370,6 @@ describe('/api/user', function() {
             expect(user.firstName).to.equal(firstName);
             expect(user.lastName).to.equal(lastName);
           })
-      });
-    });
-
-    describe('GET', function() {
-      it('Should return an empty array initially', function() {
-        return chai.request(app)
-          .get('/api/users')
-          .then(res => {
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
-            expect(res.body).to.have.length(0);
-          });
-      });
-      it('Should return an array of users', function() {
-        return User.create({
-          username,
-          password,
-          firstName,
-          lastName
-        }, {
-          username: usernameB,
-          password: passwordB,
-          firstName: firstNameB,
-          lastName: lastNameB
-        })
-        .then(() => chai.request(app).get('/api/users'))
-        .then(res => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body).to.have.length(2);
-          expect(res.body[0]).to.deep.equal({
-            username,
-            firstName,
-            lastName
-          });
-          expect(res.body[1]).to.deep.equal({
-            username: usernameB,
-            firstName: firstNameB,
-            lastName: lastNameB
-          });
-        });
       });
     });
   });

@@ -8,7 +8,6 @@ const passport = require('passport');
 const {router: usersRouter} = require('./users');
 const {router: authRouter, basicStrategy, jwtStrategy} = require('./auth');
 const {router: journalRouter} = require('./journal');
-//const {router: personalDataRouter} = require('./personalData');
 
 mongoose.Promise = global.Promise;
 
@@ -37,16 +36,6 @@ passport.use(jwtStrategy);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 app.use('/api/journal/', journalRouter);
-
-// A protected endpoint which needs a valid JWT to access it
-app.get('/api/protected',
-    passport.authenticate('jwt', {session: false}),
-    (req, res) => {
-        return res.json({
-            data: 'rosebud'
-        });
-    }
-);
 
 app.use('*', (req, res) => {
   console.log(req);

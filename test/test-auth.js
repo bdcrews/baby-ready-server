@@ -21,6 +21,13 @@ describe('Auth endpoints', function() {
   const password = 'examplePass';
   const firstName = 'Example';
   const lastName = 'User';
+  const bloodType = 'A';
+  const rhFactor = 'negative';
+  const userNotes = 'Example notes';
+  const docName = 'docName';
+  const docPhone = '800555555';
+  const dueDate = '';
+  const lmd = '';
 
   before(function() {
     return runServer();
@@ -36,7 +43,14 @@ describe('Auth endpoints', function() {
         username,
         password,
         firstName,
-        lastName
+        lastName,
+        bloodType,
+        docName,
+        docPhone,
+        dueDate,
+        lmd,
+        rhFactor,
+        userNotes
       })
     );
   });
@@ -99,10 +113,18 @@ describe('Auth endpoints', function() {
           const payload = jwt.verify(token, JWT_SECRET, {
             algorithm:  ["HS256"]
           });
-          expect(payload.user).to.deep.equal({
+          expect(payload.user).to.deep.include({
             username,
             firstName,
-            lastName
+            lastName,
+            bloodType,
+            docName,
+            docPhone,
+            dueDate,
+            lmd,
+            rhFactor,
+            userNotes,
+            username
           });
         })
     });

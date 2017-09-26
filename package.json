@@ -28,7 +28,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "start" : "npm run start-database && npm run start-server",
     "start-database": "mongod --dbpath=mongo_data/ --nojournal",
     "start-server": "node server.js"
   },

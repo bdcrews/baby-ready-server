@@ -21,7 +21,8 @@ const UserSchema = mongoose.Schema({
   rhFactor: {type: String},
   docName: {type: String},
   docPhone: {type: String},
-  userNotes: {type: String}
+  userNotes: {type: String},
+  colorTheme: {type: String}
 });
 
 UserSchema.methods.apiRepr = function() {
@@ -36,7 +37,8 @@ UserSchema.methods.apiRepr = function() {
     rhFactor: this.rhFactor || '',
     docName: this.docName || '',
     docPhone: this.docPhone || '',
-    userNotes: this.userNotes || ''
+    userNotes: this.userNotes || '',
+    colorTheme: this.colorTheme
   };
 }
 

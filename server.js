@@ -4,40 +4,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
-const faker = require('faker');
-
 const {router: usersRouter} = require('./users');
 const {router: authRouter, basicStrategy, jwtStrategy} = require('./auth');
 const {router: journalRouter, seedJournalRecordData} = require('./journal');
+const {initializeDemo} = require('./demo');
 
-
-
-{
-const {Journal} = require('./journal/models');
-  console.info('seeding Demo Journal data');
-  const seedData = [];
-  const d = new Date();
-  d.setMonth(d.getMonth() - 5);
-  for (let i=1; i<=1000; i++) {
-    seedData.push({
-
-      username: "demo@mail.com", //faker.internet.email,
-      title: faker.lorem.sentence(),
-      journalText: faker.lorem.paragraphs(),
-      timestamp: faker.date.between(new Date(), d),
-      doctorCheckbox: faker.random.boolean(),
-      importantCheckbox:faker.random.boolean(),
-      weight: 100 + faker.random.number()%60,
-      systolic: 120 + faker.random.number()%30,
-      diastolic: 50 + faker.random.number()%40
-    });
-  } 
-  // this will return a promise
-  Journal.remove({username: "demo@mail.com"})
-  .exec()
-  .then(()=>{Journal.insertMany(seedData)})
-  .catch(err => res.status(500).json({message: 'Internal server error'}));
-}
+initializeDemo();
 
 mongoose.Promise = global.Promise;
 
